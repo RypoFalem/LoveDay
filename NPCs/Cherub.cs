@@ -20,9 +20,17 @@ namespace LoveDay.NPCs
 
         public override void SetDefaults()
         {
-            npc.CloneDefaults(NPCID.Hornet);
+			npc.width = 34;
+			npc.height = 48;
 			npc.aiStyle = -1;
-            npc.value = 1000;
+			npc.damage = 26;
+			npc.defense = 12;
+			npc.lifeMax = 48;
+			npc.HitSound = SoundID.NPCHit1;
+			npc.knockBackResist = 0.8f;
+			npc.DeathSound = SoundID.NPCDeath1;
+			npc.value = 1000f;
+			npc.noGravity = true;
 		}
 
         public override void AI()
@@ -120,6 +128,13 @@ namespace LoveDay.NPCs
                 npc.TargetClosest(true);
                 return;
             }
-        }
+			if (npc.velocity.X > 0f) {
+				npc.spriteDirection = 1;
+			}
+			if (npc.velocity.X < 0f) {
+				npc.spriteDirection = -1;
+			}
+			npc.rotation = npc.velocity.X * 0.05f;
+		}
     }
 }
