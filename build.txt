@@ -1,0 +1,6 @@
+author = rypofalem
+version = 0.1
+displayName = Love Day
+buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*, *.ase
+homepage = https://github.com/RypoFalem/
+languageVersion = 6
