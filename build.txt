@@ -4,3 +4,4 @@ displayName = Love Day
 buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*, *.ase
 homepage = https://github.com/RypoFalem/
 languageVersion = 6
+includePDB = true
