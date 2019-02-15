@@ -62,7 +62,6 @@
   <ItemGroup>
     <Compile Include="Items\Weapons\BowOfHearts.cs" />
     <Compile Include="Items\Weapons\ItemArrowLove.cs" />
-    <Compile Include="Items\Weapons\LoveThrowingSpear.cs" />
     <Compile Include="LoveDay.cs" />
     <Compile Include="LoveDayPlayer.cs" />
     <Compile Include="NPCs\Cherub.cs" />

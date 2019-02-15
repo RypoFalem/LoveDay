@@ -1,4 +1,5 @@
 ﻿using LoveDay.Projectiles;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -30,7 +31,7 @@ namespace LoveDay.Items.Weapons
 			item.useStyle = 5; // ranged style
 			item.ranged = true;
 			item.shootSpeed = 6.6f; // arrow velocity?
-			item.shoot = mod.ProjectileType<ProjectileArrowLove>();
+			item.shoot = 1;
 
 			// It's thiiiiiiis big!
 			item.width = 12;
@@ -38,9 +39,11 @@ namespace LoveDay.Items.Weapons
 
 		}
 
-		public override void PickAmmo(Player player, ref int type, ref float speed, ref int damage, ref float knockback)
+		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
 		{
-			Main.NewText("type: " + type);
+			// Shoot custom arrow type but keep the basic properties of whatever arrow was shot
+			type = mod.ProjectileType<ProjectileArrowLove>();
+			return true;
 		}
 	}
 }

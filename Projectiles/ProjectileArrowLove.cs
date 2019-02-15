@@ -22,4 +22,17 @@ namespace LoveDay.Projectiles
 			aiType = ProjectileID.WoodenArrowFriendly;
 		}
 	}
+
+	class ProjectileArrowLoveHostile : ProjectileArrowLove
+	{
+		public override string Texture => "LoveDay/Projectiles/ProjectileArrowLove";
+
+		public override void SetDefaults()
+		{
+			base.SetDefaults();
+			projectile.friendly = false;
+			projectile.hostile = true;
+			aiType = ProjectileID.WoodenArrowHostile;
+		}
+	}
 }

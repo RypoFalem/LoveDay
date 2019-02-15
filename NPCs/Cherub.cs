@@ -4,6 +4,7 @@ using Terraria.ID;
 using Microsoft.Xna.Framework;
 using System;
 using System.Linq;
+using LoveDay.Projectiles;
 
 namespace LoveDay.NPCs
 {
@@ -186,7 +187,7 @@ namespace LoveDay.NPCs
 						Vector2 direction = Main.player[npc.target].Center - npc.Center;
 						direction.Normalize();
 						int proj = Projectile.NewProjectile(
-							npc.Center, direction * PROJECTILE_SPEED , ProjectileID.WoodenArrowHostile, npc.damage / 2, 0f, Main.myPlayer, 0, 0);
+							npc.Center, direction * PROJECTILE_SPEED , mod.ProjectileType<ProjectileArrowLoveHostile>(), npc.damage / 2, 0f, Main.myPlayer, 0, 0);
 						npc.ai[AI_SHOOT_COUNTUP] = 0f;
 					}
 				}
