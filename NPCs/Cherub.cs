@@ -37,6 +37,7 @@ namespace LoveDay.NPCs
 			npc.value = 1000f;
 			npc.noGravity = true;
 			npc.scale = Main.rand.NextFloat(.5f) + .5f;
+			
 		}
 
 		float RandomOffset(float range)

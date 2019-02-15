@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -59,9 +60,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Items\Weapons\BowOfHearts.cs" />
+    <Compile Include="Items\Weapons\ItemArrowLove.cs" />
     <Compile Include="Items\Weapons\LoveThrowingSpear.cs" />
     <Compile Include="LoveDay.cs" />
+    <Compile Include="LoveDayPlayer.cs" />
     <Compile Include="NPCs\Cherub.cs" />
+    <Compile Include="Projectiles\ProjectileArrowLove.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
