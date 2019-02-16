@@ -11,7 +11,7 @@ namespace LoveDay.Items.Weapons
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Bow of Hearts");
-			Tooltip.SetDefault("Turns Wooden Arrows into Love Arrows");
+			Tooltip.SetDefault("Turns Arrows into Love Arrows");
 		}
 
 		public override void SetDefaults()
