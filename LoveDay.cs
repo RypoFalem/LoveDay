@@ -5,8 +5,11 @@ using Terraria.ModLoader;
 
 namespace LoveDay
 {
-    public class LoveDay : Mod
-    {
+	/*
+	 * Mod main class
+	 */
+	public class LoveDay : Mod
+	{
 		public override void Load()
 		{
 

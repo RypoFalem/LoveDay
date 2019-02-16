@@ -10,6 +10,9 @@ using Terraria.ModLoader;
 
 namespace LoveDay.Items.Weapons
 {
+	/*
+	 * Ammo item for Love Arrows
+	 */
 	class ItemArrowLove : ModItem
 	{
 		public override void SetStaticDefaults()

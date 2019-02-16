@@ -6,6 +6,9 @@ using Terraria.ModLoader;
 
 namespace LoveDay.Items.Weapons
 {
+	/*
+	 * A bow that shoots turns any fired  arrow into hear arrows
+	 */
 	class BowOfHearts : ModItem
 	{
 		public override void SetStaticDefaults()

@@ -8,6 +8,9 @@ using Terraria.ModLoader;
 
 namespace LoveDay.Projectiles
 {
+	/*
+	 * An arrow that can inflict regeneration and confusion on the target
+	 */
 	class ProjectileArrowLove : ModProjectile
 	{
 

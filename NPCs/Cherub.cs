@@ -2,22 +2,24 @@
 using Terraria.ModLoader;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
-using System;
-using System.Linq;
 using LoveDay.Projectiles;
 
 namespace LoveDay.NPCs
 {
+	/*
+	 * A hostile NPC that attempts to float a safe distance from the player
+	 * while pelting said player with heart arrows
+	 */
 	class Cherub : ModNPC
 	{
 		float xMaxSpeed = 5;
 		float yMaxSpeed = 4;
 		float xAcceleration = .1f;
 		float yAcceleration = .1f;
-		float xMaintainDistance = 150;
+		float xMaintainDistance = 150; // distance to stay away from player
 		float yMaintainDistance = 100;
-		const float PROJECTILE_SPEED = 10f;
-		const int AI_SHOOT_COUNTUP = 2;
+		const float PROJECTILE_SPEED = 10f; // speed of arrows shot
+		const int AI_SHOOT_COUNTUP = 2; // index of ai variable to track when it can shoot
 
 		public override void SetStaticDefaults()
 		{
@@ -38,28 +40,34 @@ namespace LoveDay.NPCs
 			npc.value = 1000f;
 			npc.noGravity = true;
 			npc.scale = Main.rand.NextFloat(.5f) + .5f;
-			
+
 		}
 
-		float RandomOffset(float range)
+		// random number between -range and +range
+		private float RandomOffset(float range)
 		{
 			return Main.rand.NextFloat(range * 2 + 1) - range;
 		}
 
 		public override void AI()
 		{
-			
 			npc.noGravity = true;
-			if (npc.ai[0] == 0f) {
+			if (npc.ai[0] == 0f)
+			{
 				npc.TargetClosest(true);
-				if (Main.netMode != 1) {
-					if (npc.velocity.X != 0f || npc.velocity.Y < 0f || (double)npc.velocity.Y > 0.3) {
+				if (Main.netMode != 1)
+				{
+					if (npc.velocity.X != 0f || npc.velocity.Y < 0f || (double)npc.velocity.Y > 0.3)
+					{
 						npc.ai[0] = 1f;
 						npc.netUpdate = true;
-					} else {
+					}
+					else
+					{
 						Rectangle rectangle = new Rectangle((int)Main.player[npc.target].position.X, (int)Main.player[npc.target].position.Y, Main.player[npc.target].width, Main.player[npc.target].height);
 						Rectangle rectangle2 = new Rectangle((int)npc.position.X - 100, (int)npc.position.Y - 100, npc.width + 200, npc.height + 200);
-						if (rectangle2.Intersects(rectangle) || npc.life < npc.lifeMax) {
+						if (rectangle2.Intersects(rectangle) || npc.life < npc.lifeMax)
+						{
 							npc.ai[0] = 1f;
 							npc.velocity.Y = npc.velocity.Y - 6f;
 							npc.netUpdate = true;
@@ -68,22 +76,29 @@ namespace LoveDay.NPCs
 				}
 			}
 			// Move around player
-			else if (!Main.player[npc.target].dead) {
-				if (npc.collideX) {
+			else if (!Main.player[npc.target].dead)
+			{
+				if (npc.collideX)
+				{
 					npc.velocity.X = npc.oldVelocity.X * -0.5f;
-					if (npc.direction == -1 && npc.velocity.X > 0f && npc.velocity.X < 2f) {
+					if (npc.direction == -1 && npc.velocity.X > 0f && npc.velocity.X < 2f)
+					{
 						npc.velocity.X = 2f;
 					}
-					if (npc.direction == 1 && npc.velocity.X < 0f && npc.velocity.X > -2f) {
+					if (npc.direction == 1 && npc.velocity.X < 0f && npc.velocity.X > -2f)
+					{
 						npc.velocity.X = -2f;
 					}
 				}
-				if (npc.collideY) {
+				if (npc.collideY)
+				{
 					npc.velocity.Y = npc.oldVelocity.Y * -0.5f;
-					if (npc.velocity.Y > 0f && npc.velocity.Y < 1f) {
+					if (npc.velocity.Y > 0f && npc.velocity.Y < 1f)
+					{
 						npc.velocity.Y = 1f;
 					}
-					if (npc.velocity.Y < 0f && npc.velocity.Y > -1f) {
+					if (npc.velocity.Y < 0f && npc.velocity.Y > -1f)
+					{
 						npc.velocity.Y = -1f;
 					}
 				}
@@ -96,7 +111,8 @@ namespace LoveDay.NPCs
 				xGoal += RandomOffset(10);
 				float yGoal = Main.player[npc.target].position.Y - (float)( npc.height / 2 ) - yMaintainDistance + RandomOffset(10);
 				// Adjust movement goal away from other cherubs
-				foreach (NPC otherNPC in Main.npc) {
+				foreach (NPC otherNPC in Main.npc)
+				{
 					if (!otherNPC.active
 						|| otherNPC.type != npc.type
 						|| ( otherNPC.position - npc.position ).LengthSquared() > npc.width * npc.height * 5)
@@ -108,53 +124,74 @@ namespace LoveDay.NPCs
 				}
 
 				// Move towards Movement goal
-				if (npc.Center.X > xGoal && npc.velocity.X > -xMaxSpeed) {
+				if (npc.Center.X > xGoal && npc.velocity.X > -xMaxSpeed)
+				{
 					npc.velocity.X = npc.velocity.X - xAcceleration;
-					if (npc.velocity.X > xMaxSpeed) {
+					if (npc.velocity.X > xMaxSpeed)
+					{
 						npc.velocity.X = npc.velocity.X - xAcceleration;
-					} else if (npc.velocity.X > 0f) {
+					}
+					else if (npc.velocity.X > 0f)
+					{
 						npc.velocity.X = npc.velocity.X - xAcceleration / 2;
 					}
-					if (npc.velocity.X < -xMaxSpeed) {
+					if (npc.velocity.X < -xMaxSpeed)
+					{
 						npc.velocity.X = -xMaxSpeed;
 					}
-				} else if (npc.Center.X < xGoal && npc.velocity.X < xMaxSpeed) {
+				}
+				else if (npc.Center.X < xGoal && npc.velocity.X < xMaxSpeed)
+				{
 					npc.velocity.X = npc.velocity.X + xAcceleration;
-					if (npc.velocity.X < -3f) {
+					if (npc.velocity.X < -3f)
+					{
 						npc.velocity.X = npc.velocity.X + xAcceleration;
-					} else if (npc.velocity.X < 0f) {
+					}
+					else if (npc.velocity.X < 0f)
+					{
 						npc.velocity.X = npc.velocity.X + xAcceleration / 2;
 					}
-					if (npc.velocity.X > xMaxSpeed) {
+					if (npc.velocity.X > xMaxSpeed)
+					{
 						npc.velocity.X = xMaxSpeed;
 					}
 				}
-				if (npc.position.Y < yGoal) {
+				if (npc.position.Y < yGoal)
+				{
 					npc.velocity.Y = npc.velocity.Y + yAcceleration;
-					if (npc.velocity.Y < 0f) {
+					if (npc.velocity.Y < 0f)
+					{
 						npc.velocity.Y = npc.velocity.Y + yAcceleration / 5;
 					}
-				} else {
+				}
+				else
+				{
 					npc.velocity.Y = npc.velocity.Y - yAcceleration;
-					if (npc.velocity.Y > 0f) {
+					if (npc.velocity.Y > 0f)
+					{
 						npc.velocity.Y = npc.velocity.Y - yAcceleration / 5;
 					}
 				}
-				if (npc.velocity.Y < -yMaxSpeed) {
+				if (npc.velocity.Y < -yMaxSpeed)
+				{
 					npc.velocity.Y = -yMaxSpeed;
 				}
-				if (npc.velocity.Y > yMaxSpeed) {
+				if (npc.velocity.Y > yMaxSpeed)
+				{
 					npc.velocity.Y = yMaxSpeed;
 				}
 			}
 
 			//slow down if wet
-			if (npc.wet) {
-				if (npc.velocity.Y > 0f) {
+			if (npc.wet)
+			{
+				if (npc.velocity.Y > 0f)
+				{
 					npc.velocity.Y = npc.velocity.Y * 0.95f;
 				}
 				npc.velocity.Y = npc.velocity.Y - 0.5f;
-				if (npc.velocity.Y < -4f) {
+				if (npc.velocity.Y < -4f)
+				{
 					npc.velocity.Y = -4f;
 				}
 				npc.TargetClosest(true);
@@ -162,39 +199,47 @@ namespace LoveDay.NPCs
 			}
 
 			// Face the sprite towards target player or in the direction it moves
-			if (!Main.player[npc.target].dead) {
+			if (!Main.player[npc.target].dead)
+			{
 				float xDeltaDistance = npc.position.X + (float)( npc.width / 2 ) - ( Main.player[npc.target].position.X + (float)( Main.player[npc.target].width / 2 ) );
 				npc.spriteDirection = xDeltaDistance > 0 ? -1 : 1;
-			} else {
-				if (npc.velocity.X > 0f) {
+			}
+			else
+			{
+				if (npc.velocity.X > 0f)
+				{
 					npc.spriteDirection = 1;
 				}
-				if (npc.velocity.X < 0f) {
+				if (npc.velocity.X < 0f)
+				{
 					npc.spriteDirection = -1;
 				}
 			}
 
-			if (Main.netMode != 1) {
+			if (Main.netMode != 1)
+			{
 				npc.ai[AI_SHOOT_COUNTUP] += Main.rand.Next(5, 20) * 0.1f * npc.scale;
-				if (Main.player[npc.target].stealth == 0f && Main.player[npc.target].itemAnimation == 0) {
+				if (Main.player[npc.target].stealth == 0f && Main.player[npc.target].itemAnimation == 0)
+				{
 					npc.ai[AI_SHOOT_COUNTUP] = 0f;
 				}
 
 				// Shoot a projectile at the player
-				if (!Main.player[npc.target].dead && npc.ai[AI_SHOOT_COUNTUP] > 45f) {
-					if (Collision.CanHit(npc.position, npc.width, npc.height, Main.player[npc.target].position, Main.player[npc.target].width, Main.player[npc.target].height)) {
+				if (!Main.player[npc.target].dead && npc.ai[AI_SHOOT_COUNTUP] > 70f)
+				{
+					if (Collision.CanHit(npc.position, npc.width, npc.height, Main.player[npc.target].position, Main.player[npc.target].width, Main.player[npc.target].height))
+					{
 						//public static int NewProjectile(Vector2 position, Vector2 velocity, int Type, int Damage, float KnockBack, int Owner = 255, float ai0 = 0, float ai1 = 0);
 						Vector2 direction = Main.player[npc.target].Center - npc.Center;
 						direction.Normalize();
 						int proj = Projectile.NewProjectile(
-							npc.Center, direction * PROJECTILE_SPEED , mod.ProjectileType<ProjectileArrowLoveHostile>(), npc.damage / 2, 0f, Main.myPlayer, 0, 0);
+							npc.Center, direction * PROJECTILE_SPEED, mod.ProjectileType<ProjectileArrowLoveHostile>(), npc.damage / 2, 0f, Main.myPlayer, 0, 0);
 						npc.ai[AI_SHOOT_COUNTUP] = 0f;
 					}
 				}
 			}
 
-
-
+			// rotate the sprite towards it's movement direction
 			npc.rotation = npc.velocity.X * 0.05f;
 		}
 	}

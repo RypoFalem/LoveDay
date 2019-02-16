@@ -10,6 +10,6 @@ namespace LoveDay
 {
 	class LoveDayPlayer : ModPlayer
 	{
-		
+
 	}
 }
