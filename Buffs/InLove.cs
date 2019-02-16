@@ -27,13 +27,13 @@ namespace LoveDay.Buffs
 
 		public override void Update(NPC npc, ref int buffIndex)
 		{
-			if (npc.buffTime[Type] % 60 == 0)
+			if (npc.buffTime[buffIndex] % 60 == 0)
 				npc.HealEffect(HEAL_PER_SECOND);
 		}
 
 		public override void Update(Player player, ref int buffIndex)
 		{
-			if (player.buffTime[Type] % 60 == 0)
+			if (player.buffTime[buffIndex] % 60 == 0)
 				player.HealEffect(HEAL_PER_SECOND);
 		}
 	}
