@@ -53,6 +53,14 @@ namespace LoveDay.NPCs
 			npc.scale = Main.rand.NextFloat(.5f) + .5f;
 		}
 
+		public override float SpawnChance(NPCSpawnInfo spawnInfo)
+		{
+			if (spawnInfo.player.ZoneHoly
+				&& spawnInfo.player.ZoneOverworldHeight)
+				return SpawnCondition.OverworldHallow.Chance;
+			return 0;
+		}
+
 		// random number between -range and +range
 		private float RandomOffset(float range)
 		{
