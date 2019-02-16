@@ -40,7 +40,6 @@ namespace LoveDay.NPCs
 			npc.value = 1000f;
 			npc.noGravity = true;
 			npc.scale = Main.rand.NextFloat(.5f) + .5f;
-
 		}
 
 		// random number between -range and +range
@@ -216,6 +215,7 @@ namespace LoveDay.NPCs
 				}
 			}
 
+			// Arrow Shoot and cooldown logic
 			if (Main.netMode != 1)
 			{
 				npc.ai[AI_SHOOT_COUNTUP] += Main.rand.Next(5, 20) * 0.1f * npc.scale;

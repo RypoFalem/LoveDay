@@ -1,8 +1,10 @@
-﻿using System;
+﻿using LoveDay.Buffs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -13,6 +15,13 @@ namespace LoveDay.Projectiles
 	 */
 	class ProjectileArrowLove : ModProjectile
 	{
+		// 5 seconds
+		private const int BUFF_TIME = 5 * 60;
+
+		public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("Love Arrow");
+		}
 
 		public override void SetDefaults()
 		{
@@ -24,6 +33,22 @@ namespace LoveDay.Projectiles
 			projectile.ranged = true;
 			aiType = ProjectileID.WoodenArrowFriendly;
 		}
+
+		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+		{
+			target.AddBuff(mod.BuffType<InLove>(), BUFF_TIME); // NPCs don't react to regen buff sadly
+			target.AddBuff(BuffID.Confused, BUFF_TIME);
+			target.AddBuff(BuffID.Lovestruck, BUFF_TIME);
+		}
+
+		public override void OnHitPvp(Player target, int damage, bool crit) => OnHitPlayer(target, damage, crit);
+		public override void OnHitPlayer(Player target, int damage, bool crit)
+		{
+			target.AddBuff(mod.BuffType<InLove>(), BUFF_TIME);
+			target.AddBuff(BuffID.Confused, BUFF_TIME);
+			target.AddBuff(BuffID.Lovestruck, BUFF_TIME);
+		}
+
 	}
 
 	class ProjectileArrowLoveHostile : ProjectileArrowLove

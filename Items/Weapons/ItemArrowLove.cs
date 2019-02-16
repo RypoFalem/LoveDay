@@ -18,7 +18,7 @@ namespace LoveDay.Items.Weapons
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Love Arrow");
-			Tooltip.SetDefault("Chases enemies through walls");
+			Tooltip.SetDefault("Confuses and heals enemies");
 		}
 
 		public override void SetDefaults()
