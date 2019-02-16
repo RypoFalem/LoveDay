@@ -19,7 +19,18 @@ namespace LoveDay.NPCs
 		float xMaintainDistance = 150; // distance to stay away from player
 		float yMaintainDistance = 100;
 		const float PROJECTILE_SPEED = 10f; // speed of arrows shot
-		const int AI_SHOOT_COUNTUP = 2; // index of ai variable to track when it can shoot
+		const int AI_SHOOT_COUNTUP_INDEX = 2; // index of ai variable to track when it can shoot
+		const int SHOOT_DELAY = 100; // delay between shots, roughly
+
+		float AIShootCountup {
+			get{return npc.ai[AI_SHOOT_COUNTUP_INDEX];}
+			set{npc.ai[AI_SHOOT_COUNTUP_INDEX] = value;}
+		}
+
+		Player TargetPlayer {
+			get { return Main.player[npc.target]; }
+			set { Main.player[npc.target] = value; }
+		}
 
 		public override void SetStaticDefaults()
 		{
@@ -63,7 +74,7 @@ namespace LoveDay.NPCs
 					}
 					else
 					{
-						Rectangle rectangle = new Rectangle((int)Main.player[npc.target].position.X, (int)Main.player[npc.target].position.Y, Main.player[npc.target].width, Main.player[npc.target].height);
+						Rectangle rectangle = new Rectangle((int)TargetPlayer.position.X, (int)TargetPlayer.position.Y, TargetPlayer.width, TargetPlayer.height);
 						Rectangle rectangle2 = new Rectangle((int)npc.position.X - 100, (int)npc.position.Y - 100, npc.width + 200, npc.height + 200);
 						if (rectangle2.Intersects(rectangle) || npc.life < npc.lifeMax)
 						{
@@ -75,7 +86,7 @@ namespace LoveDay.NPCs
 				}
 			}
 			// Move around player
-			else if (!Main.player[npc.target].dead)
+			else if (!TargetPlayer.dead)
 			{
 				if (npc.collideX)
 				{
@@ -105,10 +116,10 @@ namespace LoveDay.NPCs
 				// Set movement goal above and away from player
 				npc.TargetClosest(true);
 				float xGoal = npc.direction == 1
-					? Main.player[npc.target].Center.X - xMaintainDistance
-					: Main.player[npc.target].Center.X + xMaintainDistance;
+					? TargetPlayer.Center.X - xMaintainDistance
+					: TargetPlayer.Center.X + xMaintainDistance;
 				xGoal += RandomOffset(10);
-				float yGoal = Main.player[npc.target].position.Y - (float)( npc.height / 2 ) - yMaintainDistance + RandomOffset(10);
+				float yGoal = TargetPlayer.position.Y - (float)( npc.height / 2 ) - yMaintainDistance + RandomOffset(10);
 				// Adjust movement goal away from other cherubs
 				foreach (NPC otherNPC in Main.npc)
 				{
@@ -198,9 +209,9 @@ namespace LoveDay.NPCs
 			}
 
 			// Face the sprite towards target player or in the direction it moves
-			if (!Main.player[npc.target].dead)
+			if (!TargetPlayer.dead)
 			{
-				float xDeltaDistance = npc.position.X + (float)( npc.width / 2 ) - ( Main.player[npc.target].position.X + (float)( Main.player[npc.target].width / 2 ) );
+				float xDeltaDistance = npc.position.X + (float)( npc.width / 2 ) - ( TargetPlayer.position.X + (float)( TargetPlayer.width / 2 ) );
 				npc.spriteDirection = xDeltaDistance > 0 ? -1 : 1;
 			}
 			else
@@ -218,23 +229,23 @@ namespace LoveDay.NPCs
 			// Arrow Shoot and cooldown logic
 			if (Main.netMode != 1)
 			{
-				npc.ai[AI_SHOOT_COUNTUP] += Main.rand.Next(5, 20) * 0.1f * npc.scale;
-				if (Main.player[npc.target].stealth == 0f && Main.player[npc.target].itemAnimation == 0)
+				AIShootCountup += Main.rand.Next(5, 20) * 0.1f * npc.scale;
+				if (TargetPlayer.stealth == 0f && TargetPlayer.itemAnimation == 0)
 				{
-					npc.ai[AI_SHOOT_COUNTUP] = 0f;
+					AIShootCountup = 0f;
 				}
 
 				// Shoot a projectile at the player
-				if (!Main.player[npc.target].dead && npc.ai[AI_SHOOT_COUNTUP] > 70f)
+				if (!TargetPlayer.dead && AIShootCountup > SHOOT_DELAY)
 				{
-					if (Collision.CanHit(npc.position, npc.width, npc.height, Main.player[npc.target].position, Main.player[npc.target].width, Main.player[npc.target].height))
+					if (Collision.CanHit(npc.position, npc.width, npc.height, TargetPlayer.position, TargetPlayer.width, TargetPlayer.height))
 					{
 						//public static int NewProjectile(Vector2 position, Vector2 velocity, int Type, int Damage, float KnockBack, int Owner = 255, float ai0 = 0, float ai1 = 0);
-						Vector2 direction = Main.player[npc.target].Center - npc.Center;
+						Vector2 direction = TargetPlayer.Center - npc.Center;
 						direction.Normalize();
 						int proj = Projectile.NewProjectile(
 							npc.Center, direction * PROJECTILE_SPEED, mod.ProjectileType<ProjectileArrowLoveHostile>(), npc.damage / 2, 0f, Main.myPlayer, 0, 0);
-						npc.ai[AI_SHOOT_COUNTUP] = 0f;
+						AIShootCountup = 0f;
 					}
 				}
 			}
