@@ -29,7 +29,7 @@ namespace LoveDay.NPCs
 
 		Player TargetPlayer {
 			get { return Main.player[npc.target]; }
-			set { Main.player[npc.target] = value; }
+			set { Main.player[npc.target] = value;  }
 		}
 
 		public override void SetStaticDefaults()
@@ -57,7 +57,7 @@ namespace LoveDay.NPCs
 		{
 			if (spawnInfo.player.ZoneHoly
 				&& spawnInfo.player.ZoneOverworldHeight)
-				return SpawnCondition.OverworldHallow.Chance;
+				return SpawnCondition.OverworldHallow.Chance * .2f;
 			return 0;
 		}
 
@@ -70,31 +70,8 @@ namespace LoveDay.NPCs
 		public override void AI()
 		{
 			npc.noGravity = true;
-			if (npc.ai[0] == 0f)
-			{
-				npc.TargetClosest(true);
-				if (Main.netMode != 1)
-				{
-					if (npc.velocity.X != 0f || npc.velocity.Y < 0f || (double)npc.velocity.Y > 0.3)
-					{
-						npc.ai[0] = 1f;
-						npc.netUpdate = true;
-					}
-					else
-					{
-						Rectangle rectangle = new Rectangle((int)TargetPlayer.position.X, (int)TargetPlayer.position.Y, TargetPlayer.width, TargetPlayer.height);
-						Rectangle rectangle2 = new Rectangle((int)npc.position.X - 100, (int)npc.position.Y - 100, npc.width + 200, npc.height + 200);
-						if (rectangle2.Intersects(rectangle) || npc.life < npc.lifeMax)
-						{
-							npc.ai[0] = 1f;
-							npc.velocity.Y = npc.velocity.Y - 6f;
-							npc.netUpdate = true;
-						}
-					}
-				}
-			}
 			// Move around player
-			else if (!TargetPlayer.dead)
+			if (!TargetPlayer.dead)
 			{
 				if (npc.collideX)
 				{
